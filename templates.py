@@ -58,8 +58,8 @@ templates = {
     #                          "`num_samples` should be used in case when the function is called a different value is "
     #                          "provided.",
     "while-instead-of-for-loop": "Could you use a `for` loop with `range` here, instead of a `while` loop?",
-    "extra-variable": "Reflect on the variable `{extra-variable}`. Is this variable necessary to keep track of? Is there "
-                      "a way to achieve the code’s purpose without using it?",
+    "extra-variable": "Reflect on the variable `{extra-variable}`. Is this variable necessary to keep track of? Is "
+                      "there a way to achieve the code’s purpose without using it?",
 }
 
 typing_test_templates = {
@@ -82,14 +82,22 @@ typing_test_templates = {
     "deep-lookahead": "Don’t try to look more than one character ahead - let the recursion handle this.",
     "complex-base-case": "Some of your base cases can be simplified - if both words are still nonempty, can you "
                          "continue to recurse?",
-    "repeated-key-dist-calls": "Don't call get_key_distances() on every function invocation, as it is expensive to "
-                               "call - instead, use the provided variable KEY_DISTANCES.",
+    "repeated-key-dist-calls": "Don't call `get_key_distances()` on every function invocation, as it is expensive to "
+                               "call - instead, use the provided variable `KEY_DISTANCES`.",
     "if-instead-of-min": "You can use min, rather than a series of if statements, to compute the desired value.",
     # "use-zip": "Consider using `zip` to iterate over two sequences simultaneously.",
     "not-instead-of-empty-comp": "You can use `not` to test if a string is empty, rather than comparing it to the "
                                  "empty string.",
     "extra-index-variable": "Consider iterating through `words_list` directly, rather than introducing an extra "
                             "index variable that is not necessary",
+    "duplicated-loops": "Notice that this `for` loop is repeated multiple times in this function in the various "
+                        "branches of your conditional. Consider moving it outside the conditional, and compute the "
+                        "argument to `range` using `min`!",
+    "long-line": "This line is very long! Consider computing some of its subexpressions and storing their values in "
+                 "separate variables first, rather than doing everything in the same line.",
+    "weird-append": "Rather than appending to an output list, consider computing the wpm and accuracy in separate "
+                    "variables, and constructing the output list from the two variables only at the end when you "
+                    "return."
 }
 
 templates.update(typing_test_templates)
