@@ -146,10 +146,7 @@ def grade_backup(problems):
             "message": "Does this grade look reasonable?",
         }
         response = wrapped_prompt(q)
-        if response["ok"]:
-            return Grade(score, message, comments)
-        else:
-            return grade_problem(problems)
+        return Grade(score, message, comments)
     except Interrupt as e:
         if e.cmd == "reset":
             return grade_backup(problems)
