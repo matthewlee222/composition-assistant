@@ -25,25 +25,42 @@ class Grade(NamedTuple):
 
 
 def clear():
-    os.system('cls' if os.name == 'nt' else 'clear')
+    os.system("cls" if os.name == "nt" else "clear")
 
 
-def display_code_with_accepted_and_potential_comments(name, problem, accepted_comments, curr_comment=None):
+def display_code_with_accepted_and_potential_comments(
+    name, problem, accepted_comments, curr_comment=None
+):
     clear()
     print(f"Problem: {name}")
     highlighted_code = highlight(problem.code, PythonLexer(), TerminalFormatter())
     for i, line in enumerate(highlighted_code.split("\n")):
         line_num = problem.initial_line_number + i
-        if line_num in accepted_comments or (curr_comment and line_num == curr_comment.line_num):
+        if line_num in accepted_comments or (
+            curr_comment and line_num == curr_comment.line_num
+        ):
             print()
         print(f"{Fore.GREEN}{line_num} {Style.RESET_ALL}{line}")
-        if line_num in accepted_comments or (curr_comment and line_num == curr_comment.line_num):
+        if line_num in accepted_comments or (
+            curr_comment and line_num == curr_comment.line_num
+        ):
             indent_level = len(line) - len(line.strip()) + 3
             if line_num in accepted_comments:
                 for accepted_comment in accepted_comments[line_num]:
-                    print(Fore.MAGENTA + " " * indent_level + "# " + accepted_comment.comment)
+                    print(
+                        Fore.MAGENTA
+                        + " " * indent_level
+                        + "# "
+                        + accepted_comment.comment
+                    )
             if curr_comment and line_num == curr_comment.line_num:
-                print(Fore.RED + Style.BRIGHT + " " * indent_level + "# " + curr_comment.comment)
+                print(
+                    Fore.RED
+                    + Style.BRIGHT
+                    + " " * indent_level
+                    + "# "
+                    + curr_comment.comment
+                )
             print()
     print()
 
@@ -101,7 +118,10 @@ def main():
             code = get_backup_code(id)
             problems = get_problems(code)
         except Exception:
-            print(f"{Fore.RED}An exception occurred while processing backup id #{id}", file=sys.stderr)
+            print(
+                f"{Fore.RED}An exception occurred while processing backup id #{id}",
+                file=sys.stderr,
+            )
             traceback.print_exc(file=sys.stderr)
             continue
 
@@ -120,7 +140,11 @@ def grade_backup(problems):
             comments.extend(grade_problem(name, problem))
         score, message = grade(comments)
         print(message)
-        q = {"type": "confirm", "name": "ok", "message": "Does this grade look reasonable?"}
+        q = {
+            "type": "confirm",
+            "name": "ok",
+            "message": "Does this grade look reasonable?",
+        }
         response = wrapped_prompt(q)
         if response["ok"]:
             return Grade(score, message, comments)
@@ -136,19 +160,35 @@ def grade_problem(name, problem):
     try:
         accepted_comments = {}
         for comment in problem.comments:
-            display_code_with_accepted_and_potential_comments(name, problem, accepted_comments, comment)
+            display_code_with_accepted_and_potential_comments(
+                name, problem, accepted_comments, comment
+            )
             print(f"{Fore.CYAN}Potential comment: {Style.RESET_ALL}")
             print(f"{Fore.GREEN}{comment.line_num}{Style.RESET_ALL} {comment.comment}")
-            q = {"type": "confirm", "name": "ok", "message": "Add comment", "default": True}
+            q = {
+                "type": "confirm",
+                "name": "ok",
+                "message": "Add comment",
+                "default": True,
+            }
             response = wrapped_prompt(q)
             if response["ok"]:
                 add_comment(accepted_comments, complete(comment))
 
         while True:
-            display_code_with_accepted_and_potential_comments(name, problem, accepted_comments)
-            response = wrapped_input(f"? {Style.BRIGHT} Custom comment type: {Style.RESET_ALL}")
+            display_code_with_accepted_and_potential_comments(
+                name, problem, accepted_comments
+            )
+            response = wrapped_input(
+                f"? {Style.BRIGHT} Custom comment type: {Style.RESET_ALL}"
+            )
             if not response:
-                q = {"type": "confirm", "name": "ok", "message": "Go to next question?", "default": True}
+                q = {
+                    "type": "confirm",
+                    "name": "ok",
+                    "message": "Go to next question?",
+                    "default": True,
+                }
                 response = wrapped_prompt(q)
                 if response["ok"]:
                     break
@@ -162,7 +202,9 @@ def grade_problem(name, problem):
             try:
                 line_num = int(response["line_num"])
             except ValueError:
-                print(f"{Fore.RED} Expected a number, received {response['line_num']} not found! {Style.RESET_ALL}")
+                print(
+                    f"{Fore.RED} Expected a number, received {response['line_num']} not found! {Style.RESET_ALL}"
+                )
                 continue
 
             if text:
@@ -184,5 +226,5 @@ def grade_problem(name, problem):
         raise
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -6,10 +6,20 @@ import requests
 from secrets import ACCESS_TOKEN
 
 
-def get_backup_ids(file="raw_queue.txt"):
-    with open(file) as f:
+def get_backup_ids(file="raw_queue.txt", completed_file="completed"):
+    with open(file, "r+") as f, open(completed_file) as g:
         text = f.read()
-        return re.findall(r"/composition/(.+)\?", text)
+        ids = re.findall(r"/composition/(.+)\?", text)
+        completed_ids = [id.strip() for id in g]
+        ids = [id for id in ids if id not in completed_ids]
+        f.seek(0)
+        f.write(
+            "\n".join(
+                f"https://okpy.org/admin/composition/{id}?diff=full" for id in ids
+            )
+        )
+        f.truncate()
+        return ids
 
 
 def get_backup_code(id):
@@ -32,13 +42,17 @@ def get_backup_code(id):
 def submit_comment(id, line, message):
     params = {"access_token": ACCESS_TOKEN}
     data = {"filename": "typing_test.py", "line": line, "message": message}
-    r = requests.post(f"https://okpy.org/api/v3/backups/{id}/comment/", params=params, data=data)
+    r = requests.post(
+        f"https://okpy.org/api/v3/backups/{id}/comment/", params=params, data=data
+    )
     assert r.status_code == 200, "fail"
 
 
-def submit_grade(id, score, message):
+def submit_grade(id, score, message, completed="completed"):
     params = {"access_token": ACCESS_TOKEN}
     data = {"bid": id, "kind": "composition", "score": score, "message": message}
     r = requests.post(f"https://okpy.org/api/v3/score/", params=params, data=data)
     assert r.status_code == 200, "fail"
     webbrowser.open(f"https://okpy.org/admin/composition/{id}")
+    with open(completed, "a") as f:
+        f.write(id + "\n")
