@@ -102,6 +102,29 @@ typing_test_templates = {
 }
 
 ants_templates = {
+    "Short and LongThrowers": {
+        "no-min-max-range": "This method is a good start but it does not implement the `min_range` and `max_range` "
+                            "checks that it should be. There isn't a need to have additional `nearest_bee` functions "
+                            "in the `ShortThrower` and `LongThrower` classes, it's mostly just duplicated code! "
+                            "Try to combine your three implementations in one general one here. For starters, it helps "
+                            "to define `min_range` and `max_range` in the `ThrowerAnt` class.",
+        "confusing-recursive-elif": "Great job doing this recursively! Notice that each of the `elif` statements have "
+                                    "the same return value, and the condition statements are all very similar. Think "
+                                    "about how the code could compact these into one `if` statement. Also, remember "
+                                    "LongThrowers and ShortThrowers are instances of the Thrower Ant, so you can add "
+                                    "`min_range` and `max_range` attributes to the `ThrowerAnt` class and override "
+                                    "these values in your `LongThrower` and `ShortThrower` classes to make this "
+                                    "simpler.",
+        "nearest-bee-repeated": "Instead of repeating all the code for `nearest_bee` for both `ShortThrower and "
+                                "`LongThrower` thrower, using the regular `ThrowerAnt`'s near_bee function would "
+                                "reduce the amount of code needed significantly. The point of classes is that you can "
+                                "generalize one function to do the tasks of many functions with minimal code changes.",
+        "max-range-attribute": "Nitpick: Notice how we don't have to add max_range as a class attribute because "
+                               "it will inherit it from the ThrowerAnt class.",
+        "useless-init": "An `__init__` method that simply calls it's base class's `__init__` is unnecessary because "
+                        "inheritance will do this automatically without this method in `LongThrower` and "
+                        "`ShortThrower`.",
+    },
     "ThrowerAnt": {
         "range-bounds-confusing": "Instead of having to check if `min_range` and `max_range` are not properly defined, "
                                   "they could have been set to the extremes of the range like 0 and 99999.",
@@ -153,29 +176,8 @@ while place is not hive:
         "check-end-none-not-hive": "Rather than checking if the end of the chain of places has been reached `hive` "
                                    "should have been used, since the abstraction barrier is current being broken with "
                                    "the assumption `hive` will not have anything after it.",
-        "no-min-max-range": "This method is a good start but it does not implement the `min_range` and `max_range` "
-                            "checks that it should be. There isn't a need to have additional `nearest_bee` functions "
-                            "in the `ShortThrower` and `LongThrower` classes, it's mostly just duplicated code! "
-                            "Try to combine your three implementations in one general one here. For starters, it helps "
-                            "to define `min_range` and `max_range` in the `ThrowerAnt` class.",
-        "confusing-recursive-elif": "Great job doing this recursively! Notice that each of the `elif` statements have "
-                                    "the same return value, and the condition statements are all very similar. Think "
-                                    "about how the code could compact these into one `if` statement. Also, remember "
-                                    "LongThrowers and ShortThrowers are instances of the Thrower Ant, so you can add "
-                                    "`min_range` and `max_range` attributes to the `ThrowerAnt` class and override "
-                                    "these values in your `LongThrower` and `ShortThrower` classes to make this "
-                                    "simpler.",
-        "nearest-bee-repeated": "Instead of repeating all the code for `nearest_bee` for both `ShortThrower and "
-                                "`LongThrower` thrower, using the regular `ThrowerAnt`'s near_bee function would "
-                                "reduce the amount of code needed significantly. The point of classes is that you can "
-                                "generalize one function to do the tasks of many functions with minimal code changes.",
-        "max-range-attribute": "Nitpick: Notice how we don't have to add max_range as a class attribute because "
-                               "it will inherit it from the ThrowerAnt class.",
         "bad-empty-list-check": "Nitpick: Another way of saying `{bad-list-check}` is simply `{good-check}`. This is "
                                 "because the empty list is a false-y value so we don't need the additional `!= []`.",
-        "useless-init": "An `__init__` method that simply calls it's base class's `__init__` is unnecessary because "
-                        "inheritance will do this automatically without this method in `LongThrower` and "
-                        "`ShortThrower`.",
     },
     "FireAnt": {
         "no-call-ant-reduce-armor": "The `Ant.reduce_armor`method already takes care of removing an insect if its "
