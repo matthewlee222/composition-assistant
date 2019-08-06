@@ -83,12 +83,12 @@ def complete(comment):
     finally:
         readline.set_startup_hook()
 
-    complete_comment = Comment(comment.line_num, complete_text)
-
-    return complete_comment
+    return Comment(comment.line_num, complete_text)
 
 
 def add_comment(accepted_comments, new_comment):
+    if not new_comment:
+        return
     if new_comment.line_num not in accepted_comments:
         accepted_comments[new_comment.line_num] = []
     accepted_comments[new_comment.line_num].append(new_comment)
@@ -103,8 +103,7 @@ class Interrupt(Exception):
 def wrapped_prompt(q):
     ret = prompt([q])
     if not ret:
-        inp = input("command: ")
-        raise Interrupt(inp)
+        receive_command()
     return ret
 
 
@@ -112,9 +111,20 @@ def wrapped_input(q):
     try:
         ret = input(q)
     except KeyboardInterrupt:
-        inp = input("command: ")
-        raise Interrupt(inp)
+        return receive_command()
     return ret
+
+
+def receive_command():
+    readline.set_startup_hook()
+    inp = input(
+        f"\n\n"
+        f"cancel = cancel this comment\n"
+        f"clear = clear all question comments\n"
+        f"reset = reset all student comments\n"
+        f"? {Style.BRIGHT}{Fore.RED}command: {Style.RESET_ALL}"
+    )
+    raise Interrupt(inp)
 
 
 def main():
@@ -183,46 +193,53 @@ def grade_problem(name, problem):
                 add_comment(accepted_comments, complete(comment))
 
         while True:
-            display_code_with_accepted_and_potential_comments(
-                name, problem, accepted_comments
-            )
-            response = wrapped_input(
-                f"? {Style.BRIGHT} Custom comment type: {Style.RESET_ALL}"
-            )
-            if not response:
-                q = {
-                    "type": "confirm",
-                    "name": "ok",
-                    "message": "Go to next question?",
-                    "default": True,
-                }
-                response = wrapped_prompt(q)
-                if response["ok"]:
-                    break
-                continue
-            if response not in templates:
-                print(f"{Fore.RED} Template {response} not found! {Style.RESET_ALL}")
-                continue
-            text = templates[response]
-            q = {"type": "input", "name": "line_num", "message": "Line number:"}
-            response = wrapped_prompt(q)
             try:
-                line_num = int(response["line_num"])
-            except ValueError:
-                print(
-                    f"{Fore.RED} Expected a number, received {response['line_num']} not found! {Style.RESET_ALL}"
+                display_code_with_accepted_and_potential_comments(
+                    name, problem, accepted_comments
                 )
-                continue
-
-            if text:
-                fields = list(set(re.findall(r"{(.*?)}", text)))
-                comment = Comment(line_num, text, fields)
-                add_comment(accepted_comments, complete(comment))
-            else:
-                q = {"type": "input", "name": "text", "message": "Comment:"}
+                response = wrapped_input(
+                    f"? {Style.BRIGHT} Custom comment type: {Style.RESET_ALL}"
+                )
+                if not response:
+                    q = {
+                        "type": "confirm",
+                        "name": "ok",
+                        "message": "Go to next question?",
+                        "default": True,
+                    }
+                    response = wrapped_prompt(q)
+                    if response["ok"]:
+                        break
+                    continue
+                if response not in templates:
+                    print(
+                        f"{Fore.RED} Template {response} not found! {Style.RESET_ALL}"
+                    )
+                    continue
+                text = templates[response]
+                q = {"type": "input", "name": "line_num", "message": "Line number:"}
                 response = wrapped_prompt(q)
-                comment = Comment(line_num, response["text"], [])
-                add_comment(accepted_comments, comment)
+                try:
+                    line_num = int(response["line_num"])
+                except ValueError:
+                    print(
+                        f"{Fore.RED} Expected a number, received {response['line_num']} not found! {Style.RESET_ALL}"
+                    )
+                    continue
+
+                if text:
+                    fields = list(set(re.findall(r"{(.*?)}", text)))
+                    comment = Comment(line_num, text, fields)
+                    add_comment(accepted_comments, complete(comment))
+                else:
+                    q = {"type": "input", "name": "text", "message": "Comment:"}
+                    response = wrapped_prompt(q)
+                    comment = Comment(line_num, response["text"], [])
+                    add_comment(accepted_comments, comment)
+            except Interrupt as e:
+                if e.cmd == "cancel":
+                    continue
+                raise
         print()
 
         return list(sum(accepted_comments.values(), []))
