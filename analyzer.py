@@ -20,7 +20,7 @@ from stringcase import snakecase
 
 
 PROBLEMS = {
-    "ThrowerAnt": ["class ThrowerAnt", "def throw_at"],
+    "ThrowerAnt": ["class ThrowerAnt", " class FireAnt"],
     "FireAnt": ["class FireAnt", "class HungryAnt"],
     "BodyguardAnt - Ant": ["class BodyguardAnt", "class TankAnt"],
     "BodyguardAnt - Place": ["def add_insect", "def remove_insect"],

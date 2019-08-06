@@ -177,20 +177,27 @@ def grade_problem(name, problem):
     try:
         accepted_comments = {}
         for comment in problem.comments:
-            display_code_with_accepted_and_potential_comments(
-                name, problem, accepted_comments, comment
-            )
-            print(f"{Fore.CYAN}Potential comment: {Style.RESET_ALL}")
-            print(f"{Fore.GREEN}{comment.line_num}{Style.RESET_ALL} {comment.comment}")
-            q = {
-                "type": "confirm",
-                "name": "ok",
-                "message": "Add comment",
-                "default": True,
-            }
-            response = wrapped_prompt(q)
-            if response["ok"]:
-                add_comment(accepted_comments, complete(comment))
+            try:
+                display_code_with_accepted_and_potential_comments(
+                    name, problem, accepted_comments, comment
+                )
+                print(f"{Fore.CYAN}Potential comment: {Style.RESET_ALL}")
+                print(
+                    f"{Fore.GREEN}{comment.line_num}{Style.RESET_ALL} {comment.comment}"
+                )
+                q = {
+                    "type": "confirm",
+                    "name": "ok",
+                    "message": "Add comment",
+                    "default": True,
+                }
+                response = wrapped_prompt(q)
+                if response["ok"]:
+                    add_comment(accepted_comments, complete(comment))
+            except Interrupt as e:
+                if e.cmd == "cancel":
+                    continue
+                raise
 
         while True:
             try:
