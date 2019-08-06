@@ -75,15 +75,15 @@ def complete(comment):
         field_vals[field] = response["field"]
 
     complete_text = comment.comment.format(**field_vals)
-    readline.set_startup_hook(lambda: readline.insert_text(complete_text))
-    try:
-        complete_text = wrapped_input(
-            f"? {Style.BRIGHT} Final comment: {Style.RESET_ALL}"
-        )
-    finally:
-        readline.set_startup_hook()
+    q = {
+        "type": "input",
+        "name": "final",
+        "message": "Final message",
+        "default": complete_text,
+    }
+    response = wrapped_prompt(q)
 
-    return Comment(comment.line_num, complete_text)
+    return Comment(comment.line_num, response["final"])
 
 
 def add_comment(accepted_comments, new_comment):
@@ -116,7 +116,6 @@ def wrapped_input(q):
 
 
 def receive_command():
-    readline.set_startup_hook()
     inp = input(
         f"\n\n"
         f"cancel = cancel this comment\n"
