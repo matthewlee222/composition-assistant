@@ -559,8 +559,8 @@ class NoCallClassReduceArmor(Checker):
         yield from self._comments
 
     def visit_AugAssign(self, node):
-        if node.op is ast.Sub:
-            if isinstance(node.right, ast.Name) and node.id == "amount":
+        if isinstance(node.op, ast.Sub):
+            if isinstance(node.value, ast.Name) and node.value.id == "amount":
                 self._comments.append(
                     Comment(
                         node.lineno,
