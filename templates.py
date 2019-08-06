@@ -1,3 +1,4 @@
+# fmt: off
 # noinspection PyDictCreation
 templates = {
     "noeffect": "This statement has no effect. You should remove it, since it has no effect on your program.",
@@ -29,14 +30,14 @@ templates = {
     "unnecessary-parens": "Parentheses are not necessary in Python conditionals. You can write `if (X):` as `if X:`",
     # "use-max-function": "Can you use the `max` function to find the correct condition instead of saying "
     #                     "`score1 < goal` and `score0 < goal`?",
-    "two-turns-per-iteration": "The code should not run two turns in one iteration. Instead `player` should be used in "
-                               "an `if` to figure out which segment of code should be run. Then use the `other` "
-                               "function to update the `player` value.",
+    # "two-turns-per-iteration": "The code should not run two turns in one iteration. Instead `player` should be used in "
+    #                            "an `if` to figure out which segment of code should be run. Then use the `other` "
+    #                            "function to update the `player` value.",
     # "hardcoded-100": "100 should not be hard-coded as the winning value for the scores. The code should be using the "
     #                  "function parameter `goal`.",
-    "multiple-player-comparisons": "The value of `player` can only ever be 0 or 1, therefore instead of two `if`'s "
-                                   "this code can be an `if...else` clause instead. "
-                                   "Like so: ```if player == 0:\n\t# player 0 stuff\nelse:\n\t# player 1 stuff```",
+    # "multiple-player-comparisons": "The value of `player` can only ever be 0 or 1, therefore instead of two `if`'s "
+    #                                "this code can be an `if...else` clause instead. "
+    #                                "Like so: ```if player == 0:\n\t# player 0 stuff\nelse:\n\t# player 1 stuff```",
     "call-expensive-function": "Rather than calling `{expensive_function}` multiple times, it is better to store its "
                                "return value and use it whenever it is needed. This avoids redundant and possibly "
                                "expensive function calls.",
@@ -97,38 +98,178 @@ typing_test_templates = {
                  "separate variables first, rather than doing everything in the same line.",
     "weird-append": "Rather than appending to an output list, consider computing the wpm and accuracy in separate "
                     "variables, and constructing the output list from the two variables only at the end when you "
-                    "return."
+                    "return.",
 }
 
-templates.update(typing_test_templates)
+ants_templates = {
+    "ThrowerAnt": {
+        "range-bounds-confusing": "Instead of having to check if `min_range` and `max_range` are not properly defined, "
+                                  "they could have been set to the extremes of the range like 0 and 99999.",
+        "max-range-too-small": "The code uses the magic number 10 here as the `max_range` which might cause problems "
+                               "in the future, because if we ever increased the board size, the `ThrowerAnt` would be "
+                               "unable to attack bees further than 10 places away. Try using a really, really big "
+                               "number or `float('inf')` (computer representation of infinity) instead.",
+        "good-readability": "Great work! Easy to read and intuitive, and I like how this code is general and can be "
+                            "reused on any board, and also for subclasses.",
+        "good-no-rewrite-nearest-bee": "Great job! I like how you recognized that you didn't have to rewrite "
+                                       "`nearest_bee` in this class because it inherits from `ThrowerAnt`!",
+        "good-range-bounds": "Nice work! Setting min and max to extremes initially helps make the code more general "
+                             "because if we ever increased the board size, the `ThrowerAnt` will be able to attack "
+                             "bees for the correct number of places away.",
+        "hive-place-name-checking": "The code should not be checking if the name of the place is 'Hive'. The "
+                                    "abstraction barrier is being violated! This is why one of the parameters is "
+                                    "`hive`. This is a pointer to the Hive instance and can be used to check if the "
+                                    "current place is the hive. So `place.name != 'Hive'` should be "
+                                    "`place is not hive`.",
+        "no-hive-distance-variable": "A good way of figuring out where our position is relative to the ranges is "
+                                     "keeping a distance variable. Then, `while place is not hive:`, we can change "
+                                     "our current `place` to `place.entrance`, and then increment our distance by "
+                                     "1 each time. As long as it's within our `min` and `max ranges`, if `place.bees` "
+                                     "has something in it, we can make a call to `random_or_none`.",
+        "all-ant-range-attributes": "I noticed that you added `min_range` and `max_range` attributes to the `Ant` "
+                                    "class instead of the `ThrowerAnt` class! This works, but since these attributes "
+                                    "are only meaningful when we talk about `ThrowerAnt`s, it might be better to move "
+                                    "them here; after all, it doesn't make sense for `HarvesterAnt`s to have a range.",
+        "multiple-range-cases": "Instead of having multiple cases (`if self.min_range`, `if self.max_range`, `else`), "
+                                "we can consolidate the logic into one `while` loop. Try writing something like this:\n"
+                                """
+```
+place = self.place
+dist = 0
+while place is not hive:
+    if self.min_range <= dist <= self.max_range:
+    # YOUR CODE HERE
+```
+""",
+        "hive-equality-not-identity": "Notice that we pass a `hive` instance directly to this method so we should "
+                                      "compare it to `place` using Python's `is not` here to test identity. The code "
+                                      "also works when using `place.name != 'Hive'` but since `hive` is a `Place` "
+                                      "object, we can compare our current `place` to it directly.",
+        "no-while-loop-place-finder": "A better approach would be to have a `while` loop to get to the proper range of "
+                                      "`place`'s (and making sure it doesn't hit the `hive`) and then another `while` "
+                                      "loop that goes until it either hits the `hive` or the max range. In the latter "
+                                      "loop it checks if the current, within range, place has bees, and if `True` "
+                                      "returns a bee.",
+        "check-end-none-not-hive": "Rather than checking if the end of the chain of places has been reached `hive` "
+                                   "should have been used, since the abstraction barrier is current being broken with "
+                                   "the assumption `hive` will not have anything after it.",
+        "no-min-max-range": "This method is a good start but it does not implement the `min_range` and `max_range` "
+                            "checks that it should be. There isn't a need to have additional `nearest_bee` functions "
+                            "in the `ShortThrower` and `LongThrower` classes, it's mostly just duplicated code! "
+                            "Try to combine your three implementations in one general one here. For starters, it helps "
+                            "to define `min_range` and `max_range` in the `ThrowerAnt` class.",
+        "confusing-recursive-elif": "Great job doing this recursively! Notice that each of the `elif` statements have "
+                                    "the same return value, and the condition statements are all very similar. Think "
+                                    "about how the code could compact these into one `if` statement. Also, remember "
+                                    "LongThrowers and ShortThrowers are instances of the Thrower Ant, so you can add "
+                                    "`min_range` and `max_range` attributes to the `ThrowerAnt` class and override "
+                                    "these values in your `LongThrower` and `ShortThrower` classes to make this "
+                                    "simpler.",
+        "nearest-bee-repeated": "Instead of repeating all the code for `nearest_bee` for both `ShortThrower and "
+                                "`LongThrower` thrower, using the regular `ThrowerAnt`'s near_bee function would "
+                                "reduce the amount of code needed significantly. The point of classes is that you can "
+                                "generalize one function to do the tasks of many functions with minimal code changes.",
+        "max-range-attribute": "Nitpick: Notice how we don't have to add max_range as a class attribute because "
+                               "it will inherit it from the ThrowerAnt class.",
+        "bad-empty-list-check": "Nitpick: Another way of saying `{bad-list-check}` is simply `{good-check}`. This is "
+                                "because the empty list is a false-y value so we don't need the additional `!= []`.",
+        "useless-init": "An `__init__` method that simply calls it's base class's `__init__` is unnecessary because "
+                        "inheritance will do this automatically without this method in `LongThrower` and "
+                        "`ShortThrower`.",
+    },
+    "FireAnt": {
+        "no-call-ant-reduce-armor": "The `Ant.reduce_armor`method already takes care of removing an insect if its "
+                                    "armor drops to 0 or below, so we could take advantage of that by calling "
+                                    "`Ant.reduce_armor(self, amount)` rather than duplicating the logic here. This "
+                                    "would reduce the amount of code needed as we no longer have to manually remove "
+                                    "our insect and we can dedicate the rest of this method to the special features of "
+                                    "a FireAnt without worrying about the general things all Ants need to do when "
+                                    "their armor is reduced. In addition, it would allow further modularity if we "
+                                    "wanted to modify the `reduce_armor` method; instead of changing the code in many "
+                                    "places, changing it in one place may suffice.",
+        "call-insect-reduce-armor": "Calling `Insect.reduce_armor` gives us less room for future customization. It "
+                                    "would be better to call `Ant.reduce_armor`. This way, if we were to later "
+                                    "modify how `reduce_armor` works for ants, the change would be reflected in the "
+                                    "FireAnt class.",
+        "reduce-armor-called-after-check": "How about calling `Ant.reduce_armor(self,amount)` before the `if` clause? "
+                                           "Then the condition in the `if` clause could simply be `if self.armor <= 0:`"
+                                           "which would look nicer. Also, it would better reflect the logic of what is "
+                                           "happening. We always reduce the armor of `self`, and then the `if` "
+                                           "condition depends on whether or not the ant is still alive.",
+        "iterating-over-mutating-list": "If we call `reduce_armor` on a `Bee` object, the pointer to that `Bee` in the "
+                                        "`self.place.bees` list will be removed because of how `reduce_armor` was "
+                                        "implemented - read the given code carefully to see why . That is why we need "
+                                        "to make a copy to iterate through the list; we cannot iterate through it as "
+                                        "we mutate it (we'll miss some elements because the indices keep changing).",
+        "confusing-iterate-mutating-list": "It seems like this logic is here to handle the fact that we can't mutate a "
+                                           "list as we iterate over it. This works, but an easier way to get around "
+                                           "this issue is to iterate over a copy of the list. That is, we could say "
+                                           "`for bee in list(place.bees):`",
+        "iterate-no-use-range": "Instead of using getting the number of bees and using a `range` here, the code could "
+                                "iterate through the bees themselves: `for bee in list(self.place.bees)`",
+        "call-class-method-reduce-armor": "Calling `Insect.reduce_armor(bee, self.damage)` gives us less room for "
+                                          "future customization. It would be better to call "
+                                          "`bee.reduce_armor(self.damage)`.",
+        "comprehension-not-loop": "One small thing is that we generally only want to use list comprehensions when we "
+                                  "care about the list that is being created by it. In this case, "
+                                  "`[i.reduce_armor(self.damage) for i in copy]` creates a list of None's which is "
+                                  "unnecessary. Try replacing the list comprehension with a for loop.",
+    },
+    "BodyguardAnt - Ant": {
+        "complex-return-expression": "Good job, but try to simplify this function to just one boolean expression!",
+    },
+    "BodyguardAnt - Place": {
+        "no-use-can-contain": "We should use the `can_contain` function here to check for a valid container ant "
+                              "copying code. There is no point in letting functions we've already written go to waste!",
+        "no-use-contain-ant": "The code should use the `contain_ant` method here to maintain abstraction barriers.",
+    },
+}
+
+# fmt: on
 
 templates["custom"] = None
 
+templates_by_problem = {"common": templates, **ants_templates}
 
-def template_completer(text, state):
-    cnt = 0
-    out = set()
-    for key in templates:
-        if key in out:
-            continue
-        if key.startswith(text.strip()):
-            if cnt == state:
-                return key
-            out.add(key)
-            cnt += 1
+templates = {
+    key: template
+    for problem in templates_by_problem.values()
+    for key, template in problem.items()
+}
 
-    if out:
-        return
 
-    for key in templates:
-        if key in out:
-            continue
-        for word in text.split("-"):
-            if word and word in key.split("-"):
+def template_completer(name):
+    relevant_keys = list(templates_by_problem[name]) + list(
+        templates_by_problem["common"]
+    )
+
+    def completer(text, state):
+        cnt = 0
+        out = set()
+
+        for key in relevant_keys:
+            if key in out:
+                continue
+            if key.startswith(text.strip()):
                 if cnt == state:
                     return key
                 out.add(key)
                 cnt += 1
-                break
 
-    return None
+        if out:
+            return
+
+        for key in relevant_keys:
+            if key in out:
+                continue
+            for word in text.split("-"):
+                if word and word in key.split("-"):
+                    if cnt == state:
+                        return key
+                    out.add(key)
+                    cnt += 1
+                    break
+
+        return None
+
+    return completer

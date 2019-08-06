@@ -74,7 +74,14 @@ def complete(comment):
         response = wrapped_prompt(q)
         field_vals[field] = response["field"]
 
-    complete_comment = Comment(comment.line_num, comment.comment.format(**field_vals))
+    complete_text = comment.comment.format(**field_vals)
+    readline.set_startup_hook(lambda: readline.insert_text(complete_text))
+    try:
+        complete_text = input("Final comment: ")
+    finally:
+        readline.set_startup_hook()
+
+    complete_comment = Comment(comment.line_num, complete_text)
 
     return complete_comment
 
@@ -110,7 +117,6 @@ def wrapped_input(q):
 
 def main():
     readline.parse_and_bind("tab: complete")
-    readline.set_completer(template_completer)
     readline.set_completer_delims("")
 
     for id in get_backup_ids():
@@ -154,6 +160,8 @@ def grade_backup(problems):
 
 
 def grade_problem(name, problem):
+    readline.set_completer(template_completer(name))
+
     try:
         accepted_comments = {}
         for comment in problem.comments:

@@ -9,13 +9,21 @@ from stringcase import snakecase
 #     "max_scoring_num_rolls": ["def max_scoring_num_rolls", "def winner"],
 # }
 
+# PROBLEMS = {
+#     "analyze": ["def analyze", "def pig_latin"],
+#     "autocorrect": ["def autocorrect", "def swap_score"],
+#     "score_function_accurate": [
+#         "def score_function_accurate",
+#         "def score_function_final",
+#     ],
+# }
+
+
 PROBLEMS = {
-    "analyze": ["def analyze", "def pig_latin"],
-    "autocorrect": ["def autocorrect", "def swap_score"],
-    "score_function_accurate": [
-        "def score_function_accurate",
-        "def score_function_final",
-    ],
+    "ThrowerAnt": ["class ThrowerAnt", "def throw_at"],
+    "FireAnt": ["class FireAnt", "class HungryAnt"],
+    "BodyguardAnt - Ant": ["class BodyguardAnt", "class TankAnt"],
+    "BodyguardAnt - Place": ["def add_insect", "def remove_insect"],
 }
 
 
@@ -73,7 +81,7 @@ def get_problems(code: str):
     return out
 
 
-@checker
+# @checker
 class VariableNotNeededChecker(Checker):
     class Variable:
         def __init__(self):
@@ -147,27 +155,27 @@ class MeaningfulVariableNameChecker(Checker):
 
 
 # @checker
-# class MultipleLoopChecker(Checker):
-#     def __init__(self, code):
-#         self.loop_cnt = 0
-#
-#     def comments(self):
-#         if self.loop_cnt > 1:
-#             yield Comment(
-#                 0,
-#                 "Having multiple loops makes the code more complicated than it should be. "
-#                 "Instead, the code could have a boolean flag that becomes true when a call to `dice()` is 1. "
-#                 "At the end, return the total of outcomes or 1 depending on the boolean flag after the loop. "
-#                 "By keeping the behavior similar to both pig out and non pig out cases, the code is greatly simplified.",
-#             )
-#
-#     def visit_While(self, node):
-#         self.loop_cnt += 1
-#         self.generic_visit(node)
-#
-#     def visit_For(self, node):
-#         self.loop_cnt += 1
-#         self.generic_visit(node)
+class MultipleLoopChecker(Checker):
+    def __init__(self, code):
+        self.loop_cnt = 0
+
+    def comments(self):
+        if self.loop_cnt > 1:
+            yield Comment(
+                0,
+                "Having multiple loops makes the code more complicated than it should be. "
+                "Instead, the code could have a boolean flag that becomes true when a call to `dice()` is 1. "
+                "At the end, return the total of outcomes or 1 depending on the boolean flag after the loop. "
+                "By keeping the behavior similar to both pig out and non pig out cases, the code is greatly simplified.",
+            )
+
+    def visit_While(self, node):
+        self.loop_cnt += 1
+        self.generic_visit(node)
+
+    def visit_For(self, node):
+        self.loop_cnt += 1
+        self.generic_visit(node)
 
 
 @checker
@@ -346,8 +354,10 @@ class LongVariableNameChecker(Checker):
 
     def visit_Name(self, node):
         name, context = node.id, node.ctx
-        if isinstance(node.ctx, ast.Store) and (
-            max(len(part) for part in name.split("_")) > 10 or len(name) > 25
+        if (
+            name != "implemented"
+            and isinstance(node.ctx, ast.Store)
+            and (max(len(part) for part in name.split("_")) > 10 or len(name) > 25)
         ):
             if name not in self.variables:
                 self.variables[name] = self.Variable()
