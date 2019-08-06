@@ -77,7 +77,9 @@ def complete(comment):
     complete_text = comment.comment.format(**field_vals)
     readline.set_startup_hook(lambda: readline.insert_text(complete_text))
     try:
-        complete_text = input("Final comment: ")
+        complete_text = wrapped_input(
+            f"? {Style.BRIGHT} Final comment: {Style.RESET_ALL}"
+        )
     finally:
         readline.set_startup_hook()
 
