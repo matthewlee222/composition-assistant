@@ -2,7 +2,6 @@ import ast
 from typing import Dict, List, Generator, Type, NamedTuple
 from stringcase import snakecase
 
-
 # PROBLEMS = {
 #     "roll_dice": ["def roll_dice", "def free_bacon"],
 #     "play": ["def play", "#######################"],
@@ -45,12 +44,23 @@ def checker(cls):
     return cls
 
 
+def question_checker(q):
+    def checker(cls):
+        if q not in TARGETED_CHECKERS:
+            TARGETED_CHECKERS[q] = []
+        TARGETED_CHECKERS[q].append(cls)
+        return cls
+
+    return checker
+
+
 class Checker(ast.NodeVisitor):
     def comments(self) -> Generator[Comment, None, None]:
         yield NotImplemented
 
 
 CHECKERS: List[Type[Checker]] = []
+TARGETED_CHECKERS: Dict[str, List[Type[Checker]]] = {}
 
 
 def get_problems(code: str):
@@ -64,7 +74,7 @@ def get_problems(code: str):
         comments = []
 
         tree = ast.parse(func_code)
-        for checker in CHECKERS:
+        for checker in CHECKERS + TARGETED_CHECKERS.get(name, []):
             checker = checker(func_code)
             checker.visit(tree)
             for comment in checker.comments():
@@ -422,4 +432,153 @@ class CamelCaseVariableNamingChecker(Checker):
                 self.variables[name] = self.Variable()
             var = self.variables[name]
             var.line_num = min(var.line_num, node.lineno)
+        self.generic_visit(node)
+
+
+@question_checker("ThrowerAnt")
+class WrongMaxRangeChecker(Checker):
+    def __init__(self, code):
+        self._comments = []
+
+    def comments(self):
+        yield from self._comments
+
+    def visit_Assign(self, node):
+        targets, value = node.targets, node.value
+        if (
+            len(targets) == 1
+            and isinstance(targets[0], ast.Name)
+            and targets[0].id == "max_range"
+            and isinstance(value, ast.Num)
+            and value.n < 10000
+        ):
+            self._comments.append(
+                Comment(
+                    node.lineno,
+                    f"The code uses the magic number {value.n} here as the `max_range` which might cause problems in "
+                    f"the future, because if we ever increased the board size, the `ThrowerAnt` would be unable to "
+                    f"attack bees further than {value.n} places away. Try using `float('inf')` (infinity) instead.",
+                )
+            )
+        self.generic_visit(node)
+
+
+@question_checker("ThrowerAnt")
+class WrongMaxRangeChecker(Checker):
+    def __init__(self, code):
+        self._comments = []
+
+    def comments(self):
+        yield from self._comments
+
+    def visit_Assign(self, node):
+        targets, value = node.targets, node.value
+        if (
+            len(targets) == 1
+            and isinstance(targets[0], ast.Name)
+            and targets[0].id == "max_range"
+            and isinstance(value, ast.Num)
+            and value.n < 10000
+        ):
+            self._comments.append(
+                Comment(
+                    node.lineno,
+                    f"The code uses the magic number {value.n} here as the `max_range` which might cause problems in "
+                    f"the future, because if we ever increased the board size, the `ThrowerAnt` would be unable to "
+                    f"attack bees further than {value.n} places away. Try using `float('inf')` (infinity) instead.",
+                )
+            )
+        self.generic_visit(node)
+
+
+@question_checker("ThrowerAnt")
+class HiveEqualityNotIdentityChecker(Checker):
+    def __init__(self, code):
+        self._comments = []
+
+    def comments(self):
+        yield from self._comments
+
+    def visit_Compare(self, node):
+        if len(node.ops) == 1:
+            left = node.left
+            op = node.ops[0]
+            right = node.comparators[0]
+            if (
+                (isinstance(left, ast.Name) and left.id == "hive")
+                or (isinstance(right, ast.Name) and right.id == "hive")
+            ) and op is not ast.IsNot:
+                self._comments.append(
+                    Comment(
+                        node.lineno,
+                        "Notice that we pass a `hive` instance directly to this method so we should use "
+                        "Python's `is not` here to test identity. The code also works when using `!=` "
+                        "but since there's only one specific `hive`, checking for identity here makes a "
+                        "little more sense since the `Place` class doesn't define an equality method.",
+                    )
+                )
+        self.generic_visit(node)
+
+
+@question_checker("Short and LongThrowers")
+class RedefinedNearestBeeChecker(Checker):
+    def __init__(self, code):
+        self._comments = []
+
+    def comments(self):
+        yield from self._comments
+
+    def visit_FunctionDef(self, node):
+        if node.name == "nearest_bee":
+            self._comments.append(
+                Comment(
+                    node.lineno,
+                    f"Instead of repeating all the code for `nearest_bee` for both `ShortThrower` and `LongThrower`, "
+                    f"using the regular `ThrowerAnt`'s `nearest_bee` function would reduce the amount of code needed "
+                    f"significantly. The point of classes is that you can generalize one function to do the tasks of "
+                    f"many functions with minimal code changes.",
+                )
+            )
+        elif node.name == "__init__":
+            self._comments.append(
+                Comment(
+                    node.lineno,
+                    f"An `__init__` method that simply calls it's base class's `__init__` is unnecessary because "
+                    f"inheritance will do this automatically without this method in `LongThrower` and `ShortThrower`.",
+                )
+            )
+        self.generic_visit(node)
+
+
+@question_checker("FireAnt")
+class NoCallClassReduceArmor(Checker):
+    def __init__(self, code):
+        self._comments = []
+
+    def comments(self):
+        yield from self._comments
+
+    def visit_AugAssign(self, node):
+        if node.op is ast.Sub:
+            if isinstance(node.right, ast.Name) and node.id == "amount":
+                self._comments.append(
+                    Comment(
+                        node.lineno,
+                        f"The `Ant.reduce_armor`method already takes care of removing an insect if its armor drops to "
+                        f"0 or below, so we could take advantage of that by calling `Ant.reduce_armor(self, amount)` "
+                        f"rather than duplicating the logic here. In addition, it would allow further modularity if "
+                        f"we wanted to modify the `reduce_armor` method; instead of changing the code in many place, "
+                        f"changing it in one place may suffice.",
+                    )
+                )
+            else:
+                self._comments.append(
+                    Comment(
+                        node.lineno,
+                        f"Consider calling the `Bee.reduce_armour` method rather than trying to manually reimplement "
+                        f"it here, since this will duplicate logic already written elsewhere. In addition, it would "
+                        f"allow further modularity if we wanted to modify the `reduce_armor` method; instead of "
+                        f"changing the code in many place, changing it in one place may suffice.",
+                    )
+                )
         self.generic_visit(node)

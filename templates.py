@@ -164,10 +164,10 @@ while place is not hive:
     # YOUR CODE HERE
 ```
 """,
-        "hive-equality-not-identity": "Notice that we pass a `hive` instance directly to this method so we should "
-                                      "compare it to `place` using Python's `is not` here to test identity. The code "
-                                      "also works when using `place.name != 'Hive'` but since `hive` is a `Place` "
-                                      "object, we can compare our current `place` to it directly.",
+        "hive-equality-not-identity": "Notice that we pass a `hive` instance directly to this method so we should use "
+                                      "Python's `is not` here to test identity. The code also works when using `!=` "
+                                      "but since there's only one specific `hive`, checking for identity here makes a "
+                                      "little more sense since the `Place` class doesn't define an equality method.",
         "no-while-loop-place-finder": "A better approach would be to have a `while` loop to get to the proper range of "
                                       "`place`'s (and making sure it doesn't hit the `hive`) and then another `while` "
                                       "loop that goes until it either hits the `hive` or the max range. In the latter "
