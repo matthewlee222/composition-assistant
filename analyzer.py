@@ -507,7 +507,7 @@ class HiveEqualityNotIdentityChecker(Checker):
             if (
                 (isinstance(left, ast.Name) and left.id == "hive")
                 or (isinstance(right, ast.Name) and right.id == "hive")
-            ) and op is not ast.IsNot:
+            ) and not isinstance(op, ast.IsNot):
                 self._comments.append(
                     Comment(
                         node.lineno,
@@ -517,6 +517,30 @@ class HiveEqualityNotIdentityChecker(Checker):
                         "little more sense since the `Place` class doesn't define an equality method.",
                     )
                 )
+        self.generic_visit(node)
+
+
+@question_checker("ThrowerAnt")
+class HiveEqualityNotIdentityChecker(Checker):
+    def __init__(self, code):
+        self._comments = []
+
+    def comments(self):
+        yield from self._comments
+
+    def visit_Str(self, node):
+        if node.s == "Hive":
+            self._comments.append(
+                Comment(
+                    node.lineno,
+                    "The code should not be checking if the name of the place is 'Hive'. The "
+                    "abstraction barrier is being violated! This is why one of the parameters is "
+                    "`hive`. This is a pointer to the Hive instance and can be used to check if the "
+                    "current place is the hive. So `{place-var-name}.name != 'Hive'` should be "
+                    "`{place-var-name} is not hive`.",
+                    ["place-var-name"],
+                )
+            )
         self.generic_visit(node)
 
 
@@ -564,7 +588,7 @@ class NoCallClassReduceArmor(Checker):
                 self._comments.append(
                     Comment(
                         node.lineno,
-                        f"The `Ant.reduce_armor`method already takes care of removing an insect if its armor drops to "
+                        f"The `Ant.reduce_armor` method already takes care of removing an insect if its armor drops to "
                         f"0 or below, so we could take advantage of that by calling `Ant.reduce_armor(self, amount)` "
                         f"rather than duplicating the logic here. In addition, it would allow further modularity if "
                         f"we wanted to modify the `reduce_armor` method; instead of changing the code in many place, "
@@ -581,4 +605,24 @@ class NoCallClassReduceArmor(Checker):
                         f"changing the code in many place, changing it in one place may suffice.",
                     )
                 )
+        self.generic_visit(node)
+
+
+@question_checker("BodyguardAnt - Place")
+class ExtraAttributeAccessChecker(Checker):
+    def __init__(self, code):
+        self._comments = []
+
+    def comments(self):
+        yield from self._comments
+
+    def visit_Attribute(self, node):
+        if node.attr == "is_container":
+            self._comments.append(
+                Comment(
+                    node.lineno,
+                    f"Checking for `insect.is_container` or `self.ant.is_container` is redundant as it is handled by "
+                    f"the `can_contain` method.",
+                )
+            )
         self.generic_visit(node)

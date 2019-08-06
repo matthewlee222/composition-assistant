@@ -128,10 +128,10 @@ ants_templates = {
     "ThrowerAnt": {
         "range-bounds-confusing": "Instead of having to check if `min_range` and `max_range` are not properly defined, "
                                   "they could have been set to the extremes of the range like 0 and 99999.",
-        "max-range-too-small": "The code uses the magic number 10 here as the `max_range` which might cause problems "
-                               "in the future, because if we ever increased the board size, the `ThrowerAnt` would be "
-                               "unable to attack bees further than 10 places away. Try using a really, really big "
-                               "number or `float('inf')` (computer representation of infinity) instead.",
+        "max-range-too-small": "The code uses the magic number {limit} here as the `max_range` which might cause "
+                               "problems in the future, because if we ever increased the board size, the `ThrowerAnt` "
+                               "would be unable to attack bees further than {limit} places away. Try using "
+                               "`float('inf')` (computer representation of infinity) instead.",
         "good-readability": "Great work! Easy to read and intuitive, and I like how this code is general and can be "
                             "reused on any board, and also for subclasses.",
         "good-no-rewrite-nearest-bee": "Great job! I like how you recognized that you didn't have to rewrite "
@@ -178,6 +178,9 @@ while place is not hive:
                                    "the assumption `hive` will not have anything after it.",
         "bad-empty-list-check": "Nitpick: Another way of saying `{bad-list-check}` is simply `{good-check}`. This is "
                                 "because the empty list is a false-y value so we don't need the additional `!= []`.",
+        "bad-recursion": "Great job doing this recursively! Notice that many of the `elif` statements have similar "
+                         "return values, and the condition statements are all very similar. Think about how the code "
+                         "could compact these into one `if` statement."
     },
     "FireAnt": {
         "no-call-ant-reduce-armor": "The `Ant.reduce_armor`method already takes care of removing an insect if its "
@@ -207,23 +210,28 @@ while place is not hive:
                                            "list as we iterate over it. This works, but an easier way to get around "
                                            "this issue is to iterate over a copy of the list. That is, we could say "
                                            "`for bee in list(place.bees):`",
-        "iterate-no-use-range": "Instead of using getting the number of bees and using a `range` here, the code could "
+        "iterate-no-use-range": "Instead of getting the number of bees and using a `range` here, the code could "
                                 "iterate through the bees themselves: `for bee in list(self.place.bees)`",
         "call-class-method-reduce-armor": "Calling `Insect.reduce_armor(bee, self.damage)` gives us less room for "
                                           "future customization. It would be better to call "
                                           "`bee.reduce_armor(self.damage)`.",
         "comprehension-not-loop": "One small thing is that we generally only want to use list comprehensions when we "
                                   "care about the list that is being created by it. In this case, "
-                                  "`[i.reduce_armor(self.damage) for i in copy]` creates a list of None's which is "
-                                  "unnecessary. Try replacing the list comprehension with a for loop.",
+                                  "`[{bee-var-name}.reduce_armor(self.damage) for {bee-var-name} in {bee-list-name}]`"
+                                  " creates a list of None's which is unnecessary. Try replacing the list "
+                                  "comprehension with a for loop.",
     },
     "BodyguardAnt - Ant": {
         "complex-return-expression": "Good job, but try to simplify this function to just one boolean expression!",
+        "extra-if-else": "Remember that this whole conditional itself evaluates to a boolean value! So we can just "
+                         "return the expression without using `if ... else...`."
     },
     "BodyguardAnt - Place": {
         "no-use-can-contain": "We should use the `can_contain` function here to check for a valid container ant "
                               "copying code. There is no point in letting functions we've already written go to waste!",
         "no-use-contain-ant": "The code should use the `contain_ant` method here to maintain abstraction barriers.",
+        "extra-checks": "Checking for `insect.is_container` or `self.ant.is_container` is redundant as it is handled "
+                        "by the the `can_contain` method.",
     },
 }
 
