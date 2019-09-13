@@ -2,11 +2,11 @@ import ast
 from typing import Dict, List, Generator, Type, NamedTuple
 from stringcase import snakecase
 
-# PROBLEMS = {
-#     "roll_dice": ["def roll_dice", "def free_bacon"],
-#     "play": ["def play", "#######################"],
-#     "max_scoring_num_rolls": ["def max_scoring_num_rolls", "def winner"],
-# }
+PROBLEMS = {
+    "roll_dice": ["def roll_dice", "def free_bacon"],
+    "play": ["def play", "#######################"],
+    "max_scoring_num_rolls": ["def max_scoring_num_rolls", "def winner"],
+}
 
 # PROBLEMS = {
 #     "analyze": ["def analyze", "def pig_latin"],
@@ -17,14 +17,14 @@ from stringcase import snakecase
 #     ],
 # }
 
-
-PROBLEMS = {
-    "Short and LongThrowers": ["class ShortThrower", "class FireAnt"],
-    "ThrowerAnt": ["class ThrowerAnt", "def throw_at"],
-    "FireAnt": ["class FireAnt", "class HungryAnt"],
-    "BodyguardAnt - Ant": ["class BodyguardAnt", "class TankAnt"],
-    "BodyguardAnt - Place": ["def add_insect", "def remove_insect"],
-}
+#
+# PROBLEMS = {
+#     "Short and LongThrowers": ["class ShortThrower", "class FireAnt"],
+#     "ThrowerAnt": ["class ThrowerAnt", "def throw_at"],
+#     "FireAnt": ["class FireAnt", "class HungryAnt"],
+#     "BodyguardAnt - Ant": ["class BodyguardAnt", "class TankAnt"],
+#     "BodyguardAnt - Place": ["def add_insect", "def remove_insect"],
+# }
 
 
 class Comment(NamedTuple):
@@ -165,7 +165,7 @@ class MeaningfulVariableNameChecker(Checker):
         self.generic_visit(node)
 
 
-# @checker
+@question_checker("roll_dice")
 class MultipleLoopChecker(Checker):
     def __init__(self, code):
         self.loop_cnt = 0

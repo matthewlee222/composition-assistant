@@ -3,7 +3,9 @@ import webbrowser
 
 import requests
 
-from secrets import ACCESS_TOKEN
+import auth
+
+ACCESS_TOKEN = auth.OAuthSession().auth()
 
 
 def get_backup_ids(file="raw_queue.txt", completed_file="completed"):
@@ -28,20 +30,20 @@ def get_backup_code(id):
     messages = r.json()["data"]["messages"]
     out = None
     for message in messages:
-        if "ants.py" in message["contents"]:
+        if "hog.py" in message["contents"]:
             if out is not None:
-                raise Exception("Multiple ants.py found???")
-            out = message["contents"]["ants.py"]
+                raise Exception("Multiple hog.py found???")
+            out = message["contents"]["hog.py"]
 
     if out is None:
-        raise Exception("No ants.py found!!!")
+        raise Exception("No hog.py found!!!")
 
     return out
 
 
 def submit_comment(id, line, message):
     params = {"access_token": ACCESS_TOKEN}
-    data = {"filename": "ants.py", "line": line, "message": message}
+    data = {"filename": "hog.py", "line": line, "message": message}
     r = requests.post(
         f"https://okpy.org/api/v3/backups/{id}/comment/", params=params, data=data
     )

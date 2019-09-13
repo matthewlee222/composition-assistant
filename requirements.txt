@@ -1,0 +1,6 @@
+requests
+pyinquirer
+astunparse
+colorama
+stringcase
+pygments

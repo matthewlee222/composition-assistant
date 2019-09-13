@@ -3,13 +3,6 @@
 templates = {
     "noeffect": "This statement has no effect. You should remove it, since it has no effect on your program.",
     "commented-code": "You should remove commented-out code from your final product.",
-    # "has-one-flag": "Rather than counting the number of times the dice outcome is 1, the code can have a boolean flag "
-    #                 "that becomes true when a call to `dice()` is 1. The code can then return the total of outcomes or "
-    #                 "1 depending on the boolean flag after the loop.",
-    # "extra-nested-loop": "Having this nested loop makes the code more complicated than it should be. Instead, the code "
-    #                      "could have a boolean flag that becomes true when a call to `dice()` is 1. At the end, return "
-    #                      "the total of outcomes or 1 depending on the boolean flag after the loop. By keeping the "
-    #                      "behavior similar to both pig out and non pig out cases, the code is greatly simplified.",
     "simul-assign": "Python supports simultaneous assignment, which would be cleaner to use here. "
                     "e.g.: `a, b, c = 0, 0, 0`",
     "extra-swap": "Rather than using a temporary variable to swap two variables, you can use simultaneous assignment "
@@ -21,28 +14,11 @@ templates = {
     "nice-inline-comment": "Nice use of in-line comments to clarify your logic.",
     "redundant-code": "Notice that you repeat `{repeated_code}` multiple times in your code, which is redundant. "
                       "Consider rearranging your code to avoid such repetition. {hint}",
-    # "roll-results-in-list": "This is a very unique approach, I like how you incorporated lists into this! However, in "
-    #                         "terms of efficiency, you do not need to keep track of every single roll result in a list, "
-    #                         "then search through the list for a `1`; you only need to check if a given roll is a `1` "
-    #                         "in every iteration of the loop. This can be done using a boolean and a single `for` loop! "
-    #                         "Makes it a little easier on memory and runtime.",
     "spacing": "Remember to use spaces around your operators: `x=0` -> `x = 0`",
     "unnecessary-parens": "Parentheses are not necessary in Python conditionals. You can write `if (X):` as `if X:`",
-    # "use-max-function": "Can you use the `max` function to find the correct condition instead of saying "
-    #                     "`score1 < goal` and `score0 < goal`?",
-    # "two-turns-per-iteration": "The code should not run two turns in one iteration. Instead `player` should be used in "
-    #                            "an `if` to figure out which segment of code should be run. Then use the `other` "
-    #                            "function to update the `player` value.",
-    # "hardcoded-100": "100 should not be hard-coded as the winning value for the scores. The code should be using the "
-    #                  "function parameter `goal`.",
-    # "multiple-player-comparisons": "The value of `player` can only ever be 0 or 1, therefore instead of two `if`'s "
-    #                                "this code can be an `if...else` clause instead. "
-    #                                "Like so: ```if player == 0:\n\t# player 0 stuff\nelse:\n\t# player 1 stuff```",
     "call-expensive-function": "Rather than calling `{expensive_function}` multiple times, it is better to store its "
                                "return value and use it whenever it is needed. This avoids redundant and possibly "
                                "expensive function calls.",
-    # "labeled-names": "Nitpick: Since only one of the if clause or the else clause will be entered on each loop "
-    #                  "iteration, there's no need to label all your names with the player number. ",
     "incorrect-comments": "While comments can make reading code easier, make sure to keep them consistent with what "
                           "your code actually does!",
     "confusing-helper-functions": "Whenever we define a function, as a programmer, we make a decision to include some "
@@ -51,16 +27,50 @@ templates = {
                                   "the body of the function to understand. Especially because the functions are very "
                                   "short, we can instead inline the code in the body of the loop. This way, we can "
                                   "provide better context for what the code does than function names alone.",
-    # "call-make-averaged-in-loop": "Since `roll_dice` and `num_samples` do not change in the iteration, the code can "
-    #                               "call `make_averaged(roll_dice, num_samples)` outside of the loop and assign it "
-    #                               "to a name. Whether it is called outside the loop or within, that name is the "
-    #                               "same. This avoids repeating redundant and possibly expensive function calls.",
-    # "hardcoded-num-samples": "The number of samples should not be hardcoded as `1000` here. Instead, the name "
-    #                          "`num_samples` should be used in case when the function is called a different value is "
-    #                          "provided.",
     "while-instead-of-for-loop": "Could you use a `for` loop with `range` here, instead of a `while` loop?",
     "extra-variable": "Reflect on the variable `{extra-variable}`. Is this variable necessary to keep track of? Is "
                       "there a way to achieve the code’s purpose without using it?",
+}
+
+hog_templates = {
+    "roll_dice": {
+        "roll-results-in-list": "This is a very unique approach, I like how you incorporated lists into this! However, in "
+                                "terms of efficiency, you do not need to keep track of every single roll result in a list, "
+                                "then search through the list for a `1`; you only need to check if a given roll is a `1` "
+                                "in every iteration of the loop. This can be done using a boolean and a single `for` loop! "
+                                "Makes it a little easier on memory and runtime.",
+        "has-one-flag": "Rather than counting the number of times the dice outcome is 1, the code can have a boolean flag "
+                        "that becomes true when a call to `dice()` is 1. The code can then return the total of outcomes or "
+                        "1 depending on the boolean flag after the loop.",
+        "extra-nested-loop": "Having this nested loop makes the code more complicated than it should be. Instead, the code "
+                             "could have a boolean flag that becomes true when a call to `dice()` is 1. At the end, return "
+                             "the total of outcomes or 1 depending on the boolean flag after the loop. By keeping the "
+                             "behavior similar to both pig out and non pig out cases, the code is greatly simplified.",
+    },
+    "play": {
+        "use-max-function": "Can you use the `max` function to find the correct condition instead of saying "
+                            "`score1 < goal` and `score0 < goal`?",
+        "two-turns-per-iteration": "The code should not run two turns in one iteration. Instead `player` should be used in "
+                                   "an `if` to figure out which segment of code should be run. Then use the `other` "
+                                   "function to update the `player` value.",
+        "hardcoded-100": "100 should not be hard-coded as the winning value for the scores. The code should be using the "
+                         "function parameter `goal`.",
+        "multiple-player-comparisons": "The value of `player` can only ever be 0 or 1, therefore instead of two `if`'s "
+                                       "this code can be an `if...else` clause instead. "
+                                       "Like so: ```if player == 0:\n\t# player 0 stuff\nelse:\n\t# player 1 stuff```",
+        "labeled-names": "Nitpick: Since only one of the if clause or the else clause will be entered on each loop "
+                         "iteration, there's no need to label all your names with the player number. ",
+
+    },
+    "max_scoring_num_rolls": {
+        "call-make-averaged-in-loop": "Since `roll_dice` and `num_samples` do not change in the iteration, the code can "
+                                      "call `make_averaged(roll_dice, num_samples)` outside of the loop and assign it "
+                                      "to a name. Whether it is called outside the loop or within, that name is the "
+                                      "same. This avoids repeating redundant and possibly expensive function calls.",
+        "hardcoded-num-samples": "The number of samples should not be hardcoded as `1000` here. Instead, the name "
+                                 "`num_samples` should be used in case when the function is called a different value is "
+                                 "provided.",
+    },
 }
 
 typing_test_templates = {
@@ -239,7 +249,7 @@ while place is not hive:
 
 templates["custom"] = None
 
-templates_by_problem = {"common": templates, **ants_templates}
+templates_by_problem = {"common": templates, **hog_templates}
 
 templates = {
     key: template
