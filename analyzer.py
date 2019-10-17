@@ -9,8 +9,8 @@ from stringcase import snakecase
 #}
 
 PROBLEMS = {
-    "accuracy": ["def accuracy", "#######################"],
-    "autocorrect": ["def autocorrect", "#######################"],
+    "accuracy": ["def accuracy", "def wpm"],
+    "autocorrect": ["def autocorrect", "def swap_diff"],
 }
 
 #
@@ -42,7 +42,7 @@ def checker(cls):
 
 def question_checker(q):
     def checker(cls):
-        if q not in TARGETED_CHECKERS:
+        if q not in TARGETED_CHECKERS: 
             TARGETED_CHECKERS[q] = []
         TARGETED_CHECKERS[q].append(cls)
         return cls
