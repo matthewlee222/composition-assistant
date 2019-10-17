@@ -2,20 +2,16 @@ import ast
 from typing import Dict, List, Generator, Type, NamedTuple
 from stringcase import snakecase
 
-PROBLEMS = {
-    "roll_dice": ["def roll_dice", "def free_bacon"],
-    "play": ["def play", "#######################"],
-    "max_scoring_num_rolls": ["def max_scoring_num_rolls", "def winner"],
-}
+#PROBLEMS = {
+#    "roll_dice": ["def roll_dice", "def free_bacon"],
+#    "play": ["def play", "#######################"],
+#    "max_scoring_num_rolls": ["def max_scoring_num_rolls", "def winner"],
+#}
 
-# PROBLEMS = {
-#     "analyze": ["def analyze", "def pig_latin"],
-#     "autocorrect": ["def autocorrect", "def swap_score"],
-#     "score_function_accurate": [
-#         "def score_function_accurate",
-#         "def score_function_final",
-#     ],
-# }
+PROBLEMS = {
+    "accuracy": ["def accuracy", "#######################"],
+    "autocorrect": ["def autocorrect", "#######################"],
+}
 
 #
 # PROBLEMS = {
@@ -186,6 +182,22 @@ class MultipleLoopChecker(Checker):
 
     def visit_For(self, node):
         self.loop_cnt += 1
+        self.generic_visit(node)
+
+
+@question_checker("accuracy")
+class MultipleIfsChecker(Checker):
+    def __init__(self, code):
+        self.if_cnt = 0
+
+    def comments(self):
+        if self.if_cnt > 2:
+            yield Comment(0,
+                "You can use `min`, rather than a series of if statements, to compute the desired value.",
+            )
+
+    def visit_If(self, node):
+        self.if_cnt += 1
         self.generic_visit(node)
 
 

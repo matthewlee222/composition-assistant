@@ -30,20 +30,20 @@ def get_backup_code(id):
     messages = r.json()["data"]["messages"]
     out = None
     for message in messages:
-        if "hog.py" in message["contents"]:
+        if "typing.py" in message["contents"]:
             if out is not None:
-                raise Exception("Multiple hog.py found???")
-            out = message["contents"]["hog.py"]
+                raise Exception("Multiple typing.py found???")
+            out = message["contents"]["typing.py"]
 
     if out is None:
-        raise Exception("No hog.py found!!!")
+        raise Exception("No typing.py found!!!")
 
     return out
 
 
 def submit_comment(id, line, message):
     params = {"access_token": ACCESS_TOKEN}
-    data = {"filename": "hog.py", "line": line, "message": message}
+    data = {"filename": "typing.py", "line": line, "message": message}
     r = requests.post(
         f"https://okpy.org/api/v3/backups/{id}/comment/", params=params, data=data
     )
