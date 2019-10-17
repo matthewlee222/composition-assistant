@@ -113,8 +113,6 @@ typing_test_templates = {
 
 cats_templates = {
   "accuracy": {
-    "extra-index-variable": "Consider iterating through `valid_words` directly, rather than introducing an extra "
-                              "index variable that is not necessary",
     "for-loop-with-range": "Could you use a `for` loop with `range` here, instead of a `while` loop? This removes the "
                               "need for an extra index variable ",
     "earlier-length-check": "We should check if `len(typed_words) == 0` before attempting to calculate the score as it "
@@ -123,6 +121,8 @@ cats_templates = {
     "if-instead-of-min": "You can use `min`, rather than a series of `if/elif/else` statements, to compute the desired value.",
     },
   "autocorrect": {
+    "extra-index-variable": "Consider iterating through `valid_words` directly, rather than introducing an extra "
+                              "index variable that is not necessary",
     "redundant-diff-func-call": "Since these calls to `diff_function` use the same parameters, we should store the output "
                               "in a variable to avoid redundant function calls.",
     "good-min-key": "Nice use of the min function with a key! This makes the code not only efficient, but easy to read "
