@@ -95,7 +95,7 @@ typing_test_templates = {
                          "continue to recurse?",
     "repeated-key-dist-calls": "Don't call `get_key_distances()` on every function invocation, as it is expensive to "
                                "call - instead, use the provided variable `KEY_DISTANCES`.",
-    "if-instead-of-min": "You can use min, rather than a series of if statements, to compute the desired value.",
+    "if-instead-of-min": "You can use `min`, rather than a series of if statements, to compute the desired value.",
     # "use-zip": "Consider using `zip` to iterate over two sequences simultaneously.",
     "not-instead-of-empty-comp": "You can use `not` to test if a string is empty, rather than comparing it to the "
                                  "empty string.",
@@ -109,6 +109,29 @@ typing_test_templates = {
     "weird-append": "Rather than appending to an output list, consider computing the wpm and accuracy in separate "
                     "variables, and constructing the output list from the two variables only at the end when you "
                     "return.",
+}
+
+cats_templates = {
+  "accuracy": {
+    "for-loop-with-range": "Could you use a `for` loop with `range` here, instead of a `while` loop? This removes the "
+                              "need for an extra index variable ",
+    "earlier-length-check": "We should check if `len(typed_words) == 0` before attempting to calculate the score as it "
+                              "gives a cleaner flow of logic/makes it obvious that if length is 0, there's no need to "
+                              "do any extra work.",
+    "if-instead-of-min": "You can use `min`, rather than a series of `if/elif/else` statements, to compute the desired value.",
+    },
+  "autocorrect": {
+    "extra-index-variable": "Consider iterating through `valid_words` directly, rather than introducing an extra "
+                              "index variable that is not necessary",
+    "redundant-diff-func-call": "Since these calls to `diff_function` use the same parameters, we should store the output "
+                              "in a variable to avoid redundant function calls.",
+    "good-min-key": "Nice use of the min function with a key! This makes the code not only efficient, but easy to read "
+                      "and understand.",
+    "use-lambda": "Since this helper function is pretty simple and is just needed for the key of the `min` "
+                                "function call, we can write it as a lambda expression instead to make our code more concise. ",
+    "good-zip-use": "Great use of the `zip` function!",
+    "good-dict-use": "Great use of a dictionary to utilize it's `.get` method as the `key` for the `min` function!",
+  },
 }
 
 ants_templates = {
@@ -249,7 +272,7 @@ while place is not hive:
 
 templates["custom"] = None
 
-templates_by_problem = {"common": templates, **hog_templates}
+templates_by_problem = {"common": templates, **cats_templates}
 
 templates = {
     key: template
