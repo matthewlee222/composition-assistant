@@ -8,19 +8,19 @@ from stringcase import snakecase
 #    "max_scoring_num_rolls": ["def max_scoring_num_rolls", "def winner"],
 #}
 
-PROBLEMS = {
-    "accuracy": ["def accuracy", "def wpm"],
-    "autocorrect": ["def autocorrect", "def swap_diff"],
-}
-
-#
 # PROBLEMS = {
-#     "Short and LongThrowers": ["class ShortThrower", "class FireAnt"],
-#     "ThrowerAnt": ["class ThrowerAnt", "def throw_at"],
-#     "FireAnt": ["class FireAnt", "class HungryAnt"],
-#     "BodyguardAnt - Ant": ["class BodyguardAnt", "class TankAnt"],
-#     "BodyguardAnt - Place": ["def add_insect", "def remove_insect"],
+#     "accuracy": ["def accuracy", "def wpm"],
+#     "autocorrect": ["def autocorrect", "def swap_diff"],
 # }
+
+
+PROBLEMS = {
+    "Short and LongThrowers": ["class ShortThrower", "class FireAnt"],
+    "ThrowerAnt": ["class ThrowerAnt", "def throw_at"],
+    "FireAnt": ["class FireAnt", "class HungryAnt"],
+    "BodyguardAnt - Ant": ["class BodyguardAnt", "class TankAnt"],
+    "BodyguardAnt - Place": ["def add_insect", "def remove_insect"],
+}
 
 
 class Comment(NamedTuple):
