@@ -119,6 +119,7 @@ cats_templates = {
                               "gives a cleaner flow of logic/makes it obvious that if length is 0, there's no need to "
                               "do any extra work.",
     "if-instead-of-min": "You can use `min`, rather than a series of `if/elif/else` statements, to compute the desired value.",
+    "good-min-use": "Nice use of the min function to consolidate code logic of checking lengths into your for loop condition!"
     },
   "autocorrect": {
     "extra-index-variable": "Consider iterating through `valid_words` directly, rather than introducing an extra "
@@ -272,7 +273,7 @@ while place is not hive:
 
 templates["custom"] = None
 
-templates_by_problem = {"common": templates, **cats_templates}
+templates_by_problem = {"common": templates, **ants_templates}
 
 templates = {
     key: template
