@@ -140,6 +140,7 @@ def main():
                 file=sys.stderr,
             )
             traceback.print_exc(file=sys.stderr)
+            print(f"{Style.RESET_ALL}")
             continue
 
         grade = grade_backup(problems)
@@ -257,4 +258,7 @@ def grade_problem(name, problem):
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except:
+        print(f"{Style.RESET_ALL}")
