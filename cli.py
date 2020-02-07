@@ -129,7 +129,7 @@ def receive_command():
 def main():
     readline.parse_and_bind("tab: complete")
     readline.set_completer_delims("")
-
+    print("cli.py main")
     for id in get_backup_ids():
         try:
             code = get_backup_code(id)

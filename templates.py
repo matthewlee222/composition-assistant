@@ -95,7 +95,7 @@ typing_test_templates = {
                          "continue to recurse?",
     "repeated-key-dist-calls": "Don't call `get_key_distances()` on every function invocation, as it is expensive to "
                                "call - instead, use the provided variable `KEY_DISTANCES`.",
-    "if-instead-of-min": "You can use `min`, rather than a series of if statements, to compute the desired value.",
+    "use-min": "How can we use the `min` function, rather than a series of if statements, to compute the desired value?",
     # "use-zip": "Consider using `zip` to iterate over two sequences simultaneously.",
     "not-instead-of-empty-comp": "You can use `not` to test if a string is empty, rather than comparing it to the "
                                  "empty string.",
@@ -273,7 +273,8 @@ while place is not hive:
 
 templates["custom"] = None
 
-templates_by_problem = {"common": templates, **ants_templates}
+#TODO: update **<proj>_templates to match project
+templates_by_problem = {"common": templates, **hog_templates}
 
 templates = {
     key: template
