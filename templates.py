@@ -274,7 +274,7 @@ while place is not hive:
 templates["custom"] = None
 
 #TODO: update **<proj>_templates to match project
-templates_by_problem = {"common": templates, **hog_templates}
+templates_by_problem = {"common": templates, **cats_templates}
 
 templates = {
     key: template
